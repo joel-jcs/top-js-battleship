@@ -1,5 +1,10 @@
-const ship = require('./Ship');
+const Ship = require('./Ship');
 
 test('Ship', () => {
-  expect(ship()).toBe('hello');
+  const ship = Ship.createShip();
+  expect(ship).toEqual({
+    length: null,
+    timesHit: null,
+    isSunk: false,
+  });
 });
