@@ -101,7 +101,23 @@ const Gameboard = () => {
     return gameboard;
   };
 
-  return { createGameboard, placeShip, getShips, receiveAttack };
+  const areAllShipsSunk = (gameboard) => {
+    const allShips = getShips(gameboard);
+    for (let i = 0; i < allShips.length; i++) {
+      if (!allShips[i].isSunk) {
+        return false;
+      }
+    }
+    return true;
+  };
+
+  return {
+    createGameboard,
+    placeShip,
+    getShips,
+    receiveAttack,
+    areAllShipsSunk,
+  };
 };
 
 module.exports = Gameboard();

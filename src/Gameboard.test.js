@@ -186,10 +186,6 @@ describe('Placing ships in coordinates', () => {
   });
 });
 
-// Gameboards should have a receiveAttack function that takes a pair of coordinates,
-// determines whether or not the attack hit a ship and then sends the ‘hit’ function
-// to the correct ship, or records the coordinates of the missed shot.
-
 describe('Gameboard Receive Attack functions', () => {
   test('record the coordinates of missed shots', () => {
     coordinates = { row: 0, col: 0 };
@@ -257,11 +253,24 @@ describe('Gameboard Receive Attack functions', () => {
     GameboardHandler.receiveAttack(gameboard, { row: 1, col: 2 });
     expect(patrol.isSunk).toBe(true);
   });
+});
 
-  test('selecting occupied coordinates returns hit', () => {
-    // gameboard.grid[1][1] = '*';
-    // gameboard.grid[1][2] = '*';
-    // gameboard.grid[1][3] = '*';
-    // expect(gameboard.grid[1][2]).toBe('hit');
+describe('Gameboard Are All Ships Sunk?', () => {
+  test('report if all ships are sunk', () => {
+    GameboardHandler.placeShip(gameboard, carrier, { row: 0, col: 0 });
+    GameboardHandler.placeShip(gameboard, battleship, { row: 1, col: 1 });
+    GameboardHandler.placeShip(gameboard, destroyer, { row: 2, col: 2 });
+    GameboardHandler.placeShip(gameboard, submarine, { row: 3, col: 3 });
+    GameboardHandler.placeShip(gameboard, patrol, { row: 4, col: 4 });
+
+    ShipHandler.sinkShip(carrier);
+    ShipHandler.sinkShip(battleship);
+    ShipHandler.sinkShip(destroyer);
+    ShipHandler.sinkShip(submarine);
+
+    expect(GameboardHandler.areAllShipsSunk(gameboard)).toBe(false);
+
+    ShipHandler.sinkShip(patrol);
+    expect(GameboardHandler.areAllShipsSunk(gameboard)).toBe(true);
   });
 });
