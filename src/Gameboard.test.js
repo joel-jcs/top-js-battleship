@@ -27,7 +27,7 @@ describe('Placing ships in coordinates', () => {
 
   beforeEach(() => {
     gameboard = GameboardHandler.createGameboard();
-    // ships = [];
+    shipsPlaced = GameboardHandler.getShips(gameboard);
 
     carrier = ShipHandler.createShip(5);
     battleship = ShipHandler.createShip(4);
@@ -66,8 +66,8 @@ describe('Placing ships in coordinates', () => {
     expect(gameboard.grid[3][8]).toBe('*');
     expect(gameboard.grid[3][8]).toBe('*');
 
-    // expect(GameboardHandler.getShips()).toEqual([destroyer, carrier]);
-    // expect(GameboardHandler.getShips()[1]).toEqual(carrier);
+    expect(shipsPlaced).toEqual([destroyer, carrier]);
+    expect(shipsPlaced[1]).toEqual(carrier);
   });
 
   test('successfully place ship on gameboard vertically', () => {
@@ -88,8 +88,8 @@ describe('Placing ships in coordinates', () => {
     expect(gameboard.grid[8][8]).not.toBe('*');
     expect(gameboard.grid[9][8]).not.toBe('*');
 
-    // expect(GameboardHandler.getShips()[1]).toEqual(patrol);
-    // expect(ships).toEqual([battleship, patrol]);
+    expect(shipsPlaced).toEqual([battleship, patrol]);
+    expect(shipsPlaced[1]).toEqual(patrol);
   });
 
   test('placing ship out of bounds', () => {
@@ -107,7 +107,7 @@ describe('Placing ships in coordinates', () => {
       'Input coordinates are out of bounds',
     );
 
-    // expect(ships).toEqual([]);
+    expect(shipsPlaced).toEqual([]);
   });
 
   test('placing ship on an edge vertically', () => {
@@ -139,7 +139,7 @@ describe('Placing ships in coordinates', () => {
       'Trying to place ship out of bounds',
     );
 
-    // expect(ships[0]).toEqual(patrol);
+    expect(shipsPlaced[0]).toEqual(patrol);
   });
 
   test('placing ship on an edge horizontally', () => {
@@ -154,14 +154,16 @@ describe('Placing ships in coordinates', () => {
     expect(gameboard.grid[0][10]).toBe(undefined);
 
     coordinates = { row: 0, col: 5 };
-    expect(GameboardHandler.placeShip(gameboard, carrier, coordinates)).toBe(
+    expect(GameboardHandler.placeShip(gameboard, battleship, coordinates)).toBe(
       gameboard,
     );
     expect(gameboard.grid[0][5]).toBe('*');
     expect(gameboard.grid[0][6]).toBe('*');
     expect(gameboard.grid[0][7]).toBe('*');
     expect(gameboard.grid[0][8]).toBe('*');
-    expect(gameboard.grid[0][9]).toBe('*');
+    expect(gameboard.grid[0][9]).toBe('');
+
+    expect(shipsPlaced[0]).toEqual(battleship);
   });
 
   test('trying to place ship on an occupied coordinate', () => {
@@ -176,10 +178,12 @@ describe('Placing ships in coordinates', () => {
     expect(GameboardHandler.placeShip(gameboard, patrol, coordinates)).toBe(
       'There is another ship at these coordinates',
     );
+
+    expect(shipsPlaced).toEqual([carrier]);
   });
 
   test('get ships', () => {
-    // expect(GameboardHandler.getShips()).toEqual([]);
+    expect(shipsPlaced).toEqual([]);
   });
 });
 
