@@ -43,10 +43,7 @@ describe('Placing ships in coordinates', () => {
     expect(gameboard[0][3]).not.toBe('*');
     console.log(gameboard[0]);
 
-    coordinates = {
-      row: 3,
-      col: 4,
-    };
+    coordinates = { row: 3, col: 4 };
 
     GameboardHandler.placeShip(gameboard, carrier, coordinates);
 
@@ -60,10 +57,7 @@ describe('Placing ships in coordinates', () => {
 
   test('successfully place ship on gameboard vertically', () => {
     battleship.orientation = 'vertical';
-    let coordinates = {
-      row: 0,
-      col: 0,
-    };
+    let coordinates = { row: 0, col: 0 };
     GameboardHandler.placeShip(gameboard, battleship, coordinates);
 
     expect(gameboard[0][0]).toBe('*');
@@ -73,10 +67,7 @@ describe('Placing ships in coordinates', () => {
 
     patrol.orientation = 'vertical';
 
-    coordinates = {
-      row: 5,
-      col: 8,
-    };
+    coordinates = { row: 5, col: 8 };
     GameboardHandler.placeShip(gameboard, patrol, coordinates);
 
     expect(gameboard[5][8]).toBe('*');
@@ -86,7 +77,18 @@ describe('Placing ships in coordinates', () => {
     expect(gameboard[8][8]).not.toBe('*');
     expect(gameboard[9][8]).not.toBe('*');
 
-    console.log(gameboard);
+    // console.log(gameboard);
+  });
+
+  test('placing ship out of bounds', () => {
+    let coordinates = { row: 0, col: 12 };
+
+    GameboardHandler.placeShip(gameboard, battleship, coordinates);
+    console.log(gameboard[coordinates.row]);
+    expect(gameboard[0][12]).toBe(undefined);
+
+    coordinates = { row: 10, col: 1 };
+    expect(gameboard[10]).toBe(undefined);
   });
 });
 

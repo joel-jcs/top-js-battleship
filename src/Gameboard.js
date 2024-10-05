@@ -13,6 +13,22 @@ const Gameboard = () => {
   };
 
   const placeShip = (gameboard, ship, coordinates) => {
+    if (
+      //if input coordinates are out of bounds
+      coordinates.row > gameboard.length ||
+      coordinates.col > gameboard[0].length
+    ) {
+      return 'error';
+    }
+
+    // if (
+    //   // handling cases of board-edges (i.e. coordinates are inbounds but ship is larger)
+    //   ship.length + coordinates.row > gameboard.length ||
+    //   ship.length + coordinates.col > gameboard[coordinates.row].length
+    // ) {
+    //   return 'error';
+    // }
+
     const { row, col } = coordinates;
     if (ship.orientation === 'horizontal') {
       for (let i = 0; i < ship.length; i++) {
