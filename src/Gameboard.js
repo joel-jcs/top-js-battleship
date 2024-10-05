@@ -2,7 +2,7 @@ const Gameboard = () => {
   const createGameboard = () => {
     const gameboard = {
       grid: setGrid(),
-      shipsPlaced: [],
+      ships: [],
     };
 
     function setGrid() {
@@ -56,7 +56,7 @@ const Gameboard = () => {
         ship.coordinates.push({ row: row + i, col });
       }
     }
-    gameboard.shipsPlaced.push(ship);
+    gameboard.ships.push(ship);
 
     return gameboard;
   };
