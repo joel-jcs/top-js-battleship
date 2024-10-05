@@ -29,7 +29,7 @@ beforeEach(() => {
 describe('Placing ships in coordinates', () => {
   afterEach(() => (gameboard = GameboardHandler.createGameboard()));
   test('successfully place ship on gameboard horizontally', () => {
-    let coordinates = {
+    coordinates = {
       row: 0,
       col: 0,
     };
@@ -57,7 +57,7 @@ describe('Placing ships in coordinates', () => {
 
   test('successfully place ship on gameboard vertically', () => {
     battleship.orientation = 'vertical';
-    let coordinates = { row: 0, col: 0 };
+    coordinates = { row: 0, col: 0 };
     GameboardHandler.placeShip(gameboard, battleship, coordinates);
 
     expect(gameboard[0][0]).toBe('*');
@@ -81,14 +81,13 @@ describe('Placing ships in coordinates', () => {
   });
 
   test('placing ship out of bounds', () => {
-    let coordinates = { row: 0, col: 12 };
-
+    coordinates = { row: 0, col: 12 };
     GameboardHandler.placeShip(gameboard, battleship, coordinates);
-    console.log(gameboard[coordinates.row]);
     expect(gameboard[0][12]).toBe(undefined);
 
-    coordinates = { row: 10, col: 1 };
-    expect(gameboard[10]).toBe(undefined);
+    coordinates = { row: 12, col: 0 };
+    GameboardHandler.placeShip(gameboard, patrol, coordinates);
+    expect(gameboard[12]).toBe(undefined);
   });
 });
 
