@@ -15,7 +15,14 @@ const Ship = () => {
 
   const isSunk = (ship) => ship.timesHit >= ship.length;
 
-  return { createShip, hit, isSunk };
+  const sinkShip = (ship) => (ship.isSunk = true);
+
+  const setCoordinates = (ship, coordinates) => {
+    ship.coordinates.push(coordinates);
+    return ship;
+  };
+
+  return { createShip, hit, isSunk, sinkShip, setCoordinates };
 };
 
 module.exports = Ship();
