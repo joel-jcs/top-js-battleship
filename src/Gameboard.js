@@ -1,3 +1,5 @@
+const ShipHandler = require('./Ship');
+
 const Gameboard = () => {
   const createGameboard = () => {
     const gameboard = {
@@ -48,12 +50,12 @@ const Gameboard = () => {
     if (ship.orientation === 'horizontal') {
       for (let i = 0; i < ship.length; i++) {
         gameboard.grid[row][col + i] = '*';
-        ship.coordinates.push({ row, col: col + i });
+        ShipHandler.setCoordinates(ship, { row, col: col + i });
       }
     } else if (ship.orientation === 'vertical') {
       for (let i = 0; i < ship.length; i++) {
         gameboard.grid[row + i][col] = '*';
-        ship.coordinates.push({ row: row + i, col });
+        ShipHandler.setCoordinates(ship, { row: row + i, col });
       }
     }
     gameboard.ships.push(ship);
@@ -63,12 +65,37 @@ const Gameboard = () => {
 
   const getShips = (gameboard) => gameboard.ships;
 
-  const receiveAttack = (gameboard, ship, coordinates) => {
+  const getShipAtCoordinates = (gameboard, coordinates) => {
+    const allShips = getShips(gameboard);
+    for (let i = 0; i < allShips.length; i++) {
+      //iterate over all ships on the grid
+      for (let j = 0; j < allShips[i].coordinates.length; j++) {
+        //iterate over the coordinates of each ship on the grid
+        if (
+          allShips[i].coordinates[j].row === coordinates.row &&
+          allShips[i].coordinates[j].col === coordinates.col
+        ) {
+          //return the ship that matches the coordinates
+          return allShips[i];
+        }
+      }
+    }
+  };
+
+  const receiveAttack = (gameboard, coordinates) => {
     const { row, col } = coordinates;
     if (gameboard.grid[row][col] === '') {
       gameboard.grid[row][col] = 'o';
     } else if (gameboard.grid[row][col] === '*') {
       gameboard.grid[row][col] = 'x';
+
+      const shipToHit = getShipAtCoordinates(gameboard, coordinates);
+      ShipHandler.hit(shipToHit);
+
+      const isSunk = ShipHandler.isSunk(shipToHit);
+      if (isSunk) {
+        ShipHandler.sinkShip(shipToHit);
+      }
     }
 
     return gameboard;

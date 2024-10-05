@@ -16,31 +16,30 @@ test('Gameboard constructor', () => {
   ]);
 });
 
+let gameboard;
+let carrier;
+let battleship;
+let destroyer;
+let submarine;
+let patrol;
+
+beforeEach(() => {
+  gameboard = GameboardHandler.createGameboard();
+  shipsPlaced = GameboardHandler.getShips(gameboard);
+
+  carrier = ShipHandler.createShip(5);
+  battleship = ShipHandler.createShip(4);
+  destroyer = ShipHandler.createShip(3);
+  submarine = ShipHandler.createShip(3);
+  patrol = ShipHandler.createShip(2);
+  carrier.coordinates = [];
+  battleship.coordinates = [];
+  destroyer.coordinates = [];
+  submarine.coordinates = [];
+  patrol.coordinates = [];
+});
+
 describe('Placing ships in coordinates', () => {
-  let gameboard;
-  // let ships;
-  let carrier;
-  let battleship;
-  let destroyer;
-  let submarine;
-  let patrol;
-
-  beforeEach(() => {
-    gameboard = GameboardHandler.createGameboard();
-    shipsPlaced = GameboardHandler.getShips(gameboard);
-
-    carrier = ShipHandler.createShip(5);
-    battleship = ShipHandler.createShip(4);
-    destroyer = ShipHandler.createShip(3);
-    submarine = ShipHandler.createShip(3);
-    patrol = ShipHandler.createShip(2);
-    carrier.coordinates = [];
-    battleship.coordinates = [];
-    destroyer.coordinates = [];
-    submarine.coordinates = [];
-    patrol.coordinates = [];
-  });
-
   test('successfully place ship on gameboard horizontally', () => {
     coordinates = {
       row: 0,
@@ -192,25 +191,15 @@ describe('Placing ships in coordinates', () => {
 // to the correct ship, or records the coordinates of the missed shot.
 
 describe('Gameboard Receive Attack functions', () => {
-  beforeEach(() => {
-    gameboard = GameboardHandler.createGameboard();
-
-    carrier = ShipHandler.createShip(5);
-    battleship = ShipHandler.createShip(4);
-    destroyer = ShipHandler.createShip(3);
-    submarine = ShipHandler.createShip(3);
-    patrol = ShipHandler.createShip(2);
-  });
-
   test('record the coordinates of missed shots', () => {
     coordinates = { row: 0, col: 0 };
-    expect(GameboardHandler.receiveAttack(gameboard, null, coordinates)).toBe(
+    expect(GameboardHandler.receiveAttack(gameboard, coordinates)).toBe(
       gameboard,
     );
     expect(gameboard.grid[0][0]).toBe('o');
 
     coordinates = { row: 5, col: 3 };
-    expect(GameboardHandler.receiveAttack(gameboard, null, coordinates)).toBe(
+    expect(GameboardHandler.receiveAttack(gameboard, coordinates)).toBe(
       gameboard,
     );
     expect(gameboard.grid[coordinates.row][coordinates.col]).not.toBe('');
@@ -219,9 +208,9 @@ describe('Gameboard Receive Attack functions', () => {
   test('record the coordinates of hit shots', () => {
     coordinates = { row: 1, col: 1 };
     GameboardHandler.placeShip(gameboard, carrier, coordinates);
-    expect(
-      GameboardHandler.receiveAttack(gameboard, carrier, coordinates),
-    ).toBe(gameboard);
+    expect(GameboardHandler.receiveAttack(gameboard, coordinates)).toBe(
+      gameboard,
+    );
     expect(gameboard.grid[1][0]).toBe('');
     expect(gameboard.grid[1][1]).toBe('x');
     expect(gameboard.grid[1][2]).toBe('*');
@@ -231,12 +220,43 @@ describe('Gameboard Receive Attack functions', () => {
     expect(gameboard.grid[1][6]).toBe('');
   });
 
-  // test('update ship timesHit on hit', () => {
-  //   coordinates = { row: 1, col: 1 };
-  //   GameboardHandler.placeShip(gameboard, carrier, coordinates);
-  //   GameboardHandler.receiveAttack(gameboard, carrier, coordinates);
-  //   expect(carrier.timesHit).toBe(1);
-  // });
+  test('update ship timesHit on hit', () => {
+    coordinates = { row: 1, col: 1 };
+    GameboardHandler.placeShip(gameboard, carrier, coordinates);
+    GameboardHandler.receiveAttack(gameboard, coordinates);
+    expect(carrier.timesHit).toBe(1);
+
+    GameboardHandler.receiveAttack(gameboard, { row: 1, col: 2 });
+    expect(carrier.timesHit).toBe(2);
+
+    GameboardHandler.receiveAttack(gameboard, { row: 1, col: 3 });
+    expect(carrier.timesHit).toBe(3);
+
+    battleship.orientation = 'vertical';
+    coordinates = { row: 6, col: 3 };
+    GameboardHandler.placeShip(gameboard, battleship, coordinates);
+
+    GameboardHandler.receiveAttack(gameboard, coordinates);
+    expect(battleship.timesHit).toBe(1);
+
+    GameboardHandler.receiveAttack(gameboard, { row: 7, col: 3 });
+    expect(battleship.timesHit).toBe(2);
+
+    GameboardHandler.receiveAttack(gameboard, { row: 8, col: 3 });
+    expect(battleship.timesHit).toBe(3);
+
+    GameboardHandler.receiveAttack(gameboard, { row: 9, col: 3 });
+    expect(battleship.timesHit).toBe(4);
+    expect(battleship.isSunk).toBe(true);
+  });
+
+  test('ship sinks when timesHit === length', () => {
+    coordinates = { row: 1, col: 1 };
+    GameboardHandler.placeShip(gameboard, patrol, coordinates);
+    GameboardHandler.receiveAttack(gameboard, coordinates);
+    GameboardHandler.receiveAttack(gameboard, { row: 1, col: 2 });
+    expect(patrol.isSunk).toBe(true);
+  });
 
   test('selecting occupied coordinates returns hit', () => {
     // gameboard.grid[1][1] = '*';
