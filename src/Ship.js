@@ -1,18 +1,17 @@
 const Ship = () => {
-  const createShip = () => {
-    const ship = {
-      length: null,
-      timesHit: null,
+  const createShip = (length) => {
+    return {
+      length: length,
+      timesHit: 0,
       isSunk: false,
     };
-
-    return ship;
   };
 
-  return { createShip };
+  const hit = (ship) => (ship.timesHit += 1);
+
+  const isSunk = (ship) => ship.timesHit >= ship.length;
+
+  return { createShip, hit, isSunk };
 };
 
-console.log(Ship());
-
-// export default Ship();
 module.exports = Ship();
