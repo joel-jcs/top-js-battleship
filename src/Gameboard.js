@@ -1,35 +1,44 @@
 const Gameboard = () => {
   const createGameboard = () => {
-    const rows = 10;
-    const cols = 10;
-    const gameboard = [];
-    for (let i = 0; i < rows; i++) {
-      gameboard.push([]);
-      for (let j = 0; j < cols; j++) {
-        gameboard[i].push('');
+    const gameboard = {
+      grid: setGrid(),
+      shipsPlaced: [],
+    };
+
+    function setGrid() {
+      const boardArr = [];
+      const rows = 10;
+      const cols = 10;
+      for (let i = 0; i < rows; i++) {
+        boardArr.push([]);
+        for (let j = 0; j < cols; j++) {
+          boardArr[i].push('');
+        }
       }
+      return boardArr;
     }
+
     return gameboard;
   };
 
   const placeShip = (gameboard, ship, coordinates) => {
     if (
       //if input coordinates are out of bounds
-      coordinates.row > gameboard.length ||
-      coordinates.col > gameboard[0].length
+      coordinates.row > gameboard.grid.length ||
+      coordinates.col > gameboard.grid[0].length
     ) {
       return 'Input coordinates are out of bounds';
     }
 
     if (
       // handling board-edge coordinates (i.e. coordinates inbounds but ship goes outbounds)
-      ship.length + coordinates.row > gameboard.length ||
-      ship.length + coordinates.col > gameboard[coordinates.row].length
+      ship.length + coordinates.row > gameboard.grid.length ||
+      ship.length + coordinates.col > gameboard.grid[coordinates.row].length
     ) {
       return 'Trying to place ship out of bounds';
     }
 
-    const hasShip = gameboard[coordinates.row][coordinates.col] !== '';
+    const hasShip = gameboard.grid[coordinates.row][coordinates.col] !== '';
 
     if (hasShip) {
       return 'There is another ship at these coordinates';
@@ -38,23 +47,34 @@ const Gameboard = () => {
     const { row, col } = coordinates;
     if (ship.orientation === 'horizontal') {
       for (let i = 0; i < ship.length; i++) {
-        gameboard[row][col + i] = '*';
+        gameboard.grid[row][col + i] = '*';
+        ship.coordinates.push({ row, col: col + i });
       }
     } else if (ship.orientation === 'vertical') {
       for (let i = 0; i < ship.length; i++) {
-        gameboard[row + i][col] = '*';
+        gameboard.grid[row + i][col] = '*';
+        ship.coordinates.push({ row: row + i, col });
       }
+    }
+    gameboard.shipsPlaced.push(ship);
+
+    return gameboard;
+  };
+
+  const getShips = (gameboard) => gameboard.ships;
+
+  const receiveAttack = (gameboard, ship, coordinates) => {
+    const { row, col } = coordinates;
+    if (gameboard.grid[row][col] === '') {
+      gameboard.grid[row][col] = 'o';
+    } else if (gameboard.grid[row][col] === '*') {
+      gameboard.grid[row][col] = 'x';
     }
 
     return gameboard;
   };
 
-  // Got ahead of myself, this receive attack should be added after
-  //   const receiveAttack = (row, col) => {
-  //     gameboard[row][col] = 'miss';
-  //   };
-
-  return { createGameboard, placeShip };
+  return { createGameboard, placeShip, getShips, receiveAttack };
 };
 
 module.exports = Gameboard();
