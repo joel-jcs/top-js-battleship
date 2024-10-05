@@ -84,10 +84,82 @@ describe('Placing ships in coordinates', () => {
     coordinates = { row: 0, col: 12 };
     GameboardHandler.placeShip(gameboard, battleship, coordinates);
     expect(gameboard[0][12]).toBe(undefined);
+    expect(GameboardHandler.placeShip(gameboard, battleship, coordinates)).toBe(
+      'Input coordinates are out of bounds',
+    );
 
     coordinates = { row: 12, col: 0 };
     GameboardHandler.placeShip(gameboard, patrol, coordinates);
     expect(gameboard[12]).toBe(undefined);
+    expect(GameboardHandler.placeShip(gameboard, battleship, coordinates)).toBe(
+      'Input coordinates are out of bounds',
+    );
+  });
+
+  test('placing ship on an edge vertically', () => {
+    carrier.orientation = 'vertical';
+    coordinates = { row: 6, col: 5 };
+    GameboardHandler.placeShip(gameboard, carrier, coordinates);
+    expect(gameboard[6][5]).toBe('');
+    expect(gameboard[7][5]).toBe('');
+    expect(gameboard[8][5]).toBe('');
+    expect(gameboard[9][5]).toBe('');
+    expect(gameboard[10]).toBe(undefined);
+    expect(GameboardHandler.placeShip(gameboard, carrier, coordinates)).toBe(
+      'Trying to place ship out of bounds',
+    );
+
+    patrol.orientation = 'vertical';
+    coordinates = { row: 9, col: 0 };
+    GameboardHandler.placeShip(gameboard, patrol, coordinates);
+    expect(gameboard[9][0]).toBe('');
+    expect(gameboard[10]).toBe(undefined);
+
+    coordinates = { row: 8, col: 0 };
+    GameboardHandler.placeShip(gameboard, patrol, coordinates);
+    expect(gameboard[7][0]).toBe('');
+    expect(gameboard[8][0]).toBe('*');
+    expect(gameboard[9][0]).toBe('*');
+    expect(gameboard[10]).toBe(undefined);
+    expect(GameboardHandler.placeShip(gameboard, carrier, coordinates)).toBe(
+      'Trying to place ship out of bounds',
+    );
+  });
+
+  test('placing ship on an edge horizontally', () => {
+    coordinates = { row: 0, col: 6 };
+    expect(GameboardHandler.placeShip(gameboard, carrier, coordinates)).toBe(
+      'Trying to place ship out of bounds',
+    );
+    expect(gameboard[0][6]).toBe('');
+    expect(gameboard[0][7]).toBe('');
+    expect(gameboard[0][8]).toBe('');
+    expect(gameboard[0][9]).toBe('');
+    expect(gameboard[0][10]).toBe(undefined);
+
+    coordinates = { row: 0, col: 5 };
+    expect(GameboardHandler.placeShip(gameboard, carrier, coordinates)).toBe(
+      gameboard,
+    );
+    expect(gameboard[0][5]).toBe('*');
+    expect(gameboard[0][6]).toBe('*');
+    expect(gameboard[0][7]).toBe('*');
+    expect(gameboard[0][8]).toBe('*');
+    expect(gameboard[0][9]).toBe('*');
+  });
+
+  test('trying to place ship on an occupied coordinate', () => {
+    coordinates = { row: 2, col: 2 };
+    GameboardHandler.placeShip(gameboard, carrier, coordinates);
+
+    expect(GameboardHandler.placeShip(gameboard, patrol, coordinates)).toBe(
+      'There is another ship at these coordinates',
+    );
+
+    coordinates = { row: 2, col: 6 };
+    expect(GameboardHandler.placeShip(gameboard, patrol, coordinates)).toBe(
+      'There is another ship at these coordinates',
+    );
   });
 });
 
