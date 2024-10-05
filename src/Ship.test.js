@@ -33,7 +33,7 @@ describe('hit function', () => {
     patrol1 = ShipHandler.createShip(2);
   });
   test('function should increment the ships hit counter', () => {
-    console.log(ShipHandler.hit(carrier1));
+    ShipHandler.hit(carrier1);
     expect(carrier1.timesHit).toBe(1);
   });
 
