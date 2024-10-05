@@ -4,6 +4,7 @@ const Ship = () => {
       length: length,
       timesHit: 0,
       isSunk: false,
+      orientation: 'horizontal',
     };
   };
 

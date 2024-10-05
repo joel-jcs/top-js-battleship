@@ -13,12 +13,14 @@ test('Ship constructor', () => {
     length: 5,
     timesHit: 0,
     isSunk: false,
+    orientation: 'horizontal',
   });
 
   expect(patrol1).toEqual({
     length: 2,
     timesHit: 0,
     isSunk: false,
+    orientation: 'horizontal',
   });
 });
 
