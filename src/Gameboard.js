@@ -18,16 +18,22 @@ const Gameboard = () => {
       coordinates.row > gameboard.length ||
       coordinates.col > gameboard[0].length
     ) {
-      return 'error';
+      return 'Input coordinates are out of bounds';
     }
 
-    // if (
-    //   // handling cases of board-edges (i.e. coordinates are inbounds but ship is larger)
-    //   ship.length + coordinates.row > gameboard.length ||
-    //   ship.length + coordinates.col > gameboard[coordinates.row].length
-    // ) {
-    //   return 'error';
-    // }
+    if (
+      // handling board-edge coordinates (i.e. coordinates inbounds but ship goes outbounds)
+      ship.length + coordinates.row > gameboard.length ||
+      ship.length + coordinates.col > gameboard[coordinates.row].length
+    ) {
+      return 'Trying to place ship out of bounds';
+    }
+
+    const hasShip = gameboard[coordinates.row][coordinates.col] !== '';
+
+    if (hasShip) {
+      return 'There is another ship at these coordinates';
+    }
 
     const { row, col } = coordinates;
     if (ship.orientation === 'horizontal') {
