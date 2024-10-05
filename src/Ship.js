@@ -1,11 +1,14 @@
 const Ship = () => {
   const createShip = (length) => {
-    return {
+    const ship = {
       length: length,
       timesHit: 0,
       isSunk: false,
       orientation: 'horizontal',
+      coordinates: [],
     };
+
+    return ship;
   };
 
   const hit = (ship) => (ship.timesHit += 1);

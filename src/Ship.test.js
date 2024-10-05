@@ -14,6 +14,7 @@ test('Ship constructor', () => {
     timesHit: 0,
     isSunk: false,
     orientation: 'horizontal',
+    coordinates: [],
   });
 
   expect(patrol1).toEqual({
@@ -21,6 +22,7 @@ test('Ship constructor', () => {
     timesHit: 0,
     isSunk: false,
     orientation: 'horizontal',
+    coordinates: [],
   });
 });
 
