@@ -1,4 +1,4 @@
-const GameboardHandler = require('./Gameboard');
+import GameboardHandler from './Gameboard';
 
 const Player = () => {
   const createPlayer = (name, isCPU = false) => {
@@ -40,4 +40,4 @@ const Player = () => {
   };
 };
 
-module.exports = Player();
+export default Player();

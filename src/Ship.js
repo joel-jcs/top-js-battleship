@@ -25,4 +25,4 @@ const Ship = () => {
   return { createShip, hit, isSunk, sinkShip, setCoordinates };
 };
 
-module.exports = Ship();
+export default Ship();
