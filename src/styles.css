@@ -15,9 +15,69 @@
   --content-bg: #353535;
 }
 
-main {
+#content {
+  display: flex;
+  flex-direction: column;
+  /* justify-content: center; */
+  /* align-items: center; */
   background-color: var(--content-bg);
   height: calc(100vh - 40px);
+}
+
+nav {
+  width: 100%;
+  height: 60px;
+  box-shadow: 3px 0 10px rgba(0, 0, 0, 0.2);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 30px;
+  background-color: var(--nav-bg);
+}
+
+nav button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+nav button:hover {
+  opacity: 0.7;
+}
+
+#nav-logo {
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-transform: lowercase;
+}
+
+#settings-container {
+  width: 100%;
+  height: 20%;
+  display: flex;
+  background-color: green;
+  padding: 40px;
+}
+
+#game-container {
+  display: flex;
+  width: 100%;
+  height: 80%;
+}
+
+#game-container > div {
+  width: 50%;
+  height: 100%;
+  display: flex;
+  padding: 40px;
+}
+
+#player1-container {
+  background-color: red;
+}
+
+#player2-container {
+  background-color: blue;
 }
 
 footer {
