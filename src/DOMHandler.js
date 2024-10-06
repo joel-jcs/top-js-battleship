@@ -2,6 +2,6 @@ import GameboardHandler from './Gameboard';
 import PlayerHandler from './Player';
 import ShipHandler from './Ship';
 
-const ScreenController = {};
+const DOMHandler = {};
 
-export default ScreenController;
+export default DOMHandler;
