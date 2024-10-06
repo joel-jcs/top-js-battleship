@@ -46,7 +46,7 @@ describe('Placing ships in coordinates', () => {
       col: 0,
     };
 
-    GameboardHandler.placeShip(gameboard, destroyer, coordinates);
+    GameboardHandler.placeShip(gameboard, coordinates, destroyer);
 
     expect(gameboard.grid[0][0]).toBe('*');
     expect(gameboard.grid[0][1]).toBe('*');
@@ -56,7 +56,7 @@ describe('Placing ships in coordinates', () => {
 
     coordinates = { row: 3, col: 4 };
 
-    GameboardHandler.placeShip(gameboard, carrier, coordinates);
+    GameboardHandler.placeShip(gameboard, coordinates, carrier);
 
     expect(gameboard.grid[3][4]).toBe('*');
     expect(gameboard.grid[3][5]).toBe('*');
@@ -72,7 +72,7 @@ describe('Placing ships in coordinates', () => {
   test('successfully place ship on gameboard vertically', () => {
     battleship.orientation = 'vertical';
     coordinates = { row: 0, col: 0 };
-    GameboardHandler.placeShip(gameboard, battleship, coordinates);
+    GameboardHandler.placeShip(gameboard, coordinates, battleship);
     expect(gameboard.grid[0][0]).toBe('*');
     expect(gameboard.grid[1][0]).toBe('*');
     expect(gameboard.grid[2][0]).toBe('*');
@@ -80,7 +80,7 @@ describe('Placing ships in coordinates', () => {
 
     patrol.orientation = 'vertical';
     coordinates = { row: 5, col: 8 };
-    GameboardHandler.placeShip(gameboard, patrol, coordinates);
+    GameboardHandler.placeShip(gameboard, coordinates, patrol);
     expect(gameboard.grid[5][8]).toBe('*');
     expect(gameboard.grid[6][8]).toBe('*');
     expect(gameboard.grid[7][8]).not.toBe('*');
@@ -93,16 +93,16 @@ describe('Placing ships in coordinates', () => {
 
   test('placing ship out of bounds', () => {
     coordinates = { row: 0, col: 12 };
-    GameboardHandler.placeShip(gameboard, battleship, coordinates);
+    GameboardHandler.placeShip(gameboard, coordinates, battleship);
     expect(gameboard.grid[0][12]).toBe(undefined);
-    expect(GameboardHandler.placeShip(gameboard, battleship, coordinates)).toBe(
+    expect(GameboardHandler.placeShip(gameboard, coordinates, battleship)).toBe(
       'Input coordinates are out of bounds',
     );
 
     coordinates = { row: 12, col: 0 };
-    GameboardHandler.placeShip(gameboard, patrol, coordinates);
+    GameboardHandler.placeShip(gameboard, coordinates, patrol);
     expect(gameboard.grid[12]).toBe(undefined);
-    expect(GameboardHandler.placeShip(gameboard, battleship, coordinates)).toBe(
+    expect(GameboardHandler.placeShip(gameboard, coordinates, battleship)).toBe(
       'Input coordinates are out of bounds',
     );
 
@@ -112,29 +112,29 @@ describe('Placing ships in coordinates', () => {
   test('placing ship on an edge vertically', () => {
     carrier.orientation = 'vertical';
     coordinates = { row: 6, col: 5 };
-    GameboardHandler.placeShip(gameboard, carrier, coordinates);
+    GameboardHandler.placeShip(gameboard, coordinates, carrier);
     expect(gameboard.grid[6][5]).toBe('');
     expect(gameboard.grid[7][5]).toBe('');
     expect(gameboard.grid[8][5]).toBe('');
     expect(gameboard.grid[9][5]).toBe('');
     expect(gameboard.grid[10]).toBe(undefined);
-    expect(GameboardHandler.placeShip(gameboard, carrier, coordinates)).toBe(
+    expect(GameboardHandler.placeShip(gameboard, coordinates, carrier)).toBe(
       'Trying to place ship out of bounds',
     );
 
     patrol.orientation = 'vertical';
     coordinates = { row: 9, col: 0 };
-    GameboardHandler.placeShip(gameboard, patrol, coordinates);
+    GameboardHandler.placeShip(gameboard, coordinates, patrol);
     expect(gameboard.grid[9][0]).toBe('');
     expect(gameboard.grid[10]).toBe(undefined);
 
     coordinates = { row: 8, col: 0 };
-    GameboardHandler.placeShip(gameboard, patrol, coordinates);
+    GameboardHandler.placeShip(gameboard, coordinates, patrol);
     expect(gameboard.grid[7][0]).toBe('');
     expect(gameboard.grid[8][0]).toBe('*');
     expect(gameboard.grid[9][0]).toBe('*');
     expect(gameboard.grid[10]).toBe(undefined);
-    expect(GameboardHandler.placeShip(gameboard, carrier, coordinates)).toBe(
+    expect(GameboardHandler.placeShip(gameboard, coordinates, carrier)).toBe(
       'Trying to place ship out of bounds',
     );
 
@@ -143,7 +143,7 @@ describe('Placing ships in coordinates', () => {
 
   test('placing ship on an edge horizontally', () => {
     coordinates = { row: 0, col: 6 };
-    expect(GameboardHandler.placeShip(gameboard, carrier, coordinates)).toBe(
+    expect(GameboardHandler.placeShip(gameboard, coordinates, carrier)).toBe(
       'Trying to place ship out of bounds',
     );
     expect(gameboard.grid[0][6]).toBe('');
@@ -153,7 +153,7 @@ describe('Placing ships in coordinates', () => {
     expect(gameboard.grid[0][10]).toBe(undefined);
 
     coordinates = { row: 0, col: 5 };
-    expect(GameboardHandler.placeShip(gameboard, battleship, coordinates)).toBe(
+    expect(GameboardHandler.placeShip(gameboard, coordinates, battleship)).toBe(
       gameboard,
     );
     expect(gameboard.grid[0][5]).toBe('*');
@@ -167,14 +167,14 @@ describe('Placing ships in coordinates', () => {
 
   test('trying to place ship on an occupied coordinate', () => {
     coordinates = { row: 2, col: 2 };
-    GameboardHandler.placeShip(gameboard, carrier, coordinates);
+    GameboardHandler.placeShip(gameboard, coordinates, carrier);
 
-    expect(GameboardHandler.placeShip(gameboard, patrol, coordinates)).toBe(
+    expect(GameboardHandler.placeShip(gameboard, coordinates, patrol)).toBe(
       'There is another ship at these coordinates',
     );
 
     coordinates = { row: 2, col: 6 };
-    expect(GameboardHandler.placeShip(gameboard, patrol, coordinates)).toBe(
+    expect(GameboardHandler.placeShip(gameboard, coordinates, patrol)).toBe(
       'There is another ship at these coordinates',
     );
 
@@ -203,7 +203,7 @@ describe('Gameboard Receive Attack functions', () => {
 
   test('record the coordinates of hit shots', () => {
     coordinates = { row: 1, col: 1 };
-    GameboardHandler.placeShip(gameboard, carrier, coordinates);
+    GameboardHandler.placeShip(gameboard, coordinates, carrier);
     expect(GameboardHandler.receiveAttack(gameboard, coordinates)).toBe(
       gameboard,
     );
@@ -218,7 +218,7 @@ describe('Gameboard Receive Attack functions', () => {
 
   test('update ship timesHit on hit', () => {
     coordinates = { row: 1, col: 1 };
-    GameboardHandler.placeShip(gameboard, carrier, coordinates);
+    GameboardHandler.placeShip(gameboard, coordinates, carrier);
     GameboardHandler.receiveAttack(gameboard, coordinates);
     expect(carrier.timesHit).toBe(1);
 
@@ -230,7 +230,7 @@ describe('Gameboard Receive Attack functions', () => {
 
     battleship.orientation = 'vertical';
     coordinates = { row: 6, col: 3 };
-    GameboardHandler.placeShip(gameboard, battleship, coordinates);
+    GameboardHandler.placeShip(gameboard, coordinates, battleship);
 
     GameboardHandler.receiveAttack(gameboard, coordinates);
     expect(battleship.timesHit).toBe(1);
@@ -248,7 +248,7 @@ describe('Gameboard Receive Attack functions', () => {
 
   test('ship sinks when timesHit === length', () => {
     coordinates = { row: 1, col: 1 };
-    GameboardHandler.placeShip(gameboard, patrol, coordinates);
+    GameboardHandler.placeShip(gameboard, coordinates, patrol);
     GameboardHandler.receiveAttack(gameboard, coordinates);
     GameboardHandler.receiveAttack(gameboard, { row: 1, col: 2 });
     expect(patrol.isSunk).toBe(true);
@@ -257,11 +257,11 @@ describe('Gameboard Receive Attack functions', () => {
 
 describe('Gameboard Are All Ships Sunk?', () => {
   test('report if all ships are sunk', () => {
-    GameboardHandler.placeShip(gameboard, carrier, { row: 0, col: 0 });
-    GameboardHandler.placeShip(gameboard, battleship, { row: 1, col: 1 });
-    GameboardHandler.placeShip(gameboard, destroyer, { row: 2, col: 2 });
-    GameboardHandler.placeShip(gameboard, submarine, { row: 3, col: 3 });
-    GameboardHandler.placeShip(gameboard, patrol, { row: 4, col: 4 });
+    GameboardHandler.placeShip(gameboard, { row: 0, col: 0 }, carrier);
+    GameboardHandler.placeShip(gameboard, { row: 1, col: 1 }, battleship);
+    GameboardHandler.placeShip(gameboard, { row: 2, col: 2 }, destroyer);
+    GameboardHandler.placeShip(gameboard, { row: 3, col: 3 }, submarine);
+    GameboardHandler.placeShip(gameboard, { row: 4, col: 4 }, patrol);
 
     ShipHandler.sinkShip(carrier);
     ShipHandler.sinkShip(battleship);

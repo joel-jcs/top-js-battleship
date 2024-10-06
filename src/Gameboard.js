@@ -23,7 +23,7 @@ const Gameboard = () => {
     return gameboard;
   };
 
-  const placeShip = (gameboard, ship, coordinates) => {
+  const checkInvalidInput = (gameboard, coordinates, ship) => {
     if (
       //if input coordinates are out of bounds
       coordinates.row > gameboard.grid.length ||
@@ -32,18 +32,36 @@ const Gameboard = () => {
       return 'Input coordinates are out of bounds';
     }
 
-    if (
-      // handling board-edge coordinates (i.e. coordinates inbounds but ship goes outbounds)
-      ship.length + coordinates.row > gameboard.grid.length ||
-      ship.length + coordinates.col > gameboard.grid[coordinates.row].length
-    ) {
-      return 'Trying to place ship out of bounds';
+    const hasSelection =
+      gameboard.grid[coordinates.row][coordinates.col] === 'x' ||
+      gameboard.grid[coordinates.row][coordinates.col] === 'o';
+
+    if (hasSelection) {
+      return 'Coordinates have already been selected';
     }
 
-    const hasShip = gameboard.grid[coordinates.row][coordinates.col] !== '';
+    if (ship) {
+      if (
+        // handling board-edge coordinates (i.e. coordinates inbounds but ship goes outbounds)
+        ship.length + coordinates.row > gameboard.grid.length ||
+        ship.length + coordinates.col > gameboard.grid[coordinates.row].length
+      ) {
+        return 'Trying to place ship out of bounds';
+      }
 
-    if (hasShip) {
-      return 'There is another ship at these coordinates';
+      const hasShip = gameboard.grid[coordinates.row][coordinates.col] === '*';
+
+      if (hasShip) {
+        return 'There is another ship at these coordinates';
+      }
+    }
+  };
+
+  const placeShip = (gameboard, coordinates, ship) => {
+    const error = checkInvalidInput(gameboard, coordinates, ship);
+
+    if (error) {
+      return error;
     }
 
     const { row, col } = coordinates;
@@ -93,9 +111,7 @@ const Gameboard = () => {
       ShipHandler.hit(shipToHit);
 
       const isSunk = ShipHandler.isSunk(shipToHit);
-      if (isSunk) {
-        ShipHandler.sinkShip(shipToHit);
-      }
+      if (isSunk) ShipHandler.sinkShip(shipToHit);
     }
 
     return gameboard;
@@ -104,15 +120,14 @@ const Gameboard = () => {
   const areAllShipsSunk = (gameboard) => {
     const allShips = getShips(gameboard);
     for (let i = 0; i < allShips.length; i++) {
-      if (!allShips[i].isSunk) {
-        return false;
-      }
+      if (!allShips[i].isSunk) return false;
     }
     return true;
   };
 
   return {
     createGameboard,
+    checkInvalidInput,
     placeShip,
     getShips,
     receiveAttack,
