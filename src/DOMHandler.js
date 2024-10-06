@@ -9,10 +9,62 @@ const DOMHandler = () => {
     return settingsContainer;
   };
 
-  const renderGameboards = () => {
-    const player1Container = document.getElementById('player1-container');
-    const player2Container = document.getElementById('player2-container');
+  const setShips = (gameboard) => {
+    const carrier = ShipHandler.createShip(5);
+    const battleship = ShipHandler.createShip(4);
+    const destroyer = ShipHandler.createShip(3);
+    const submarine = ShipHandler.createShip(3);
+    const patrol = ShipHandler.createShip(2);
 
+    destroyer.orientation = 'vertical';
+    submarine.orientation = 'vertical';
+
+    const coordinates1 = {
+      row: Math.floor(Math.random() * 1),
+      col: Math.floor(Math.random() * 1),
+    };
+
+    const coordinates2 = {
+      row: Math.floor(Math.random() * 2) + 1,
+      col: Math.floor(Math.random() * 2) + 4,
+    };
+
+    const coordinates3 = {
+      row: Math.floor(Math.random() * 2) + 3,
+      col: Math.floor(Math.random() * 2) + 1,
+    };
+
+    const coordinates4 = {
+      row: Math.floor(Math.random() * 2) + 4,
+      col: Math.floor(Math.random() * 2) + 4,
+    };
+
+    const coordinates5 = {
+      row: Math.floor(Math.random() * 2) + 7,
+      col: Math.floor(Math.random() * 2) + 7,
+    };
+    GameboardHandler.placeShip(gameboard, coordinates1, carrier);
+    GameboardHandler.placeShip(gameboard, coordinates2, battleship);
+    GameboardHandler.placeShip(gameboard, coordinates3, destroyer);
+    GameboardHandler.placeShip(gameboard, coordinates4, submarine);
+    GameboardHandler.placeShip(gameboard, coordinates5, patrol);
+    return gameboard;
+  };
+
+  const renderShips = (gameboard, playerGrid) => {
+    const gameboardArr = setShips(gameboard);
+    const gridRows = playerGrid.querySelectorAll('.row');
+    gameboardArr.grid.forEach((gameboardRow, row) => {
+      gameboardRow.forEach((gameboardCell, col) => {
+        if (gameboardCell === '*') {
+          gridRows[row].children[col].classList.add('ship');
+        }
+      });
+    });
+  };
+
+  const renderGameboards = () => {
+    // create grid labels
     const gridRowLegend = document.createElement('div');
     const gridColLegend = document.createElement('div');
 
@@ -40,13 +92,18 @@ const DOMHandler = () => {
       gridColLegend.append(gridColLabel);
     });
 
+    const player1Container = document.getElementById('player1-container');
+    const player2Container = document.getElementById('player2-container');
+
     const gridRowLegend2 = gridRowLegend.cloneNode(true);
     const gridColLegend2 = gridColLegend.cloneNode(true);
+
     player1Container.append(gridRowLegend);
     player1Container.append(gridColLegend);
     player2Container.append(gridRowLegend2);
     player2Container.append(gridColLegend2);
 
+    // add grids to player game boards
     const player1Grid = document.createElement('div');
     const player2Grid = document.createElement('div');
 
@@ -59,30 +116,38 @@ const DOMHandler = () => {
     player1Container.append(player1Grid);
     player2Container.append(player2Grid);
 
-    const player1Board = GameboardHandler.createGameboard();
-    player1Board.grid.forEach((row) => {
+    const player1 = PlayerHandler.createPlayer('Player 1');
+    player1.gameboard.grid.forEach((row) => {
+      const rowElement = document.createElement('div');
+      rowElement.classList.add('row');
       // eslint-disable-next-line no-unused-vars
       row.forEach((col) => {
         const cell = document.createElement('div');
-        cell.classList.add('cell');
-        player1Grid.append(cell);
-      });
-    });
 
-    const player2Board = GameboardHandler.createGameboard();
-    player2Board.grid.forEach((row) => {
+        cell.classList.add('cell');
+        rowElement.append(cell);
+      });
+      player1Grid.append(rowElement);
+    });
+    renderShips(player1.gameboard, player1Grid);
+
+    const player2 = PlayerHandler.createPlayer('Player 2');
+    player2.gameboard.grid.forEach((row) => {
+      const rowElement = document.createElement('div');
+      rowElement.classList.add('row');
       // eslint-disable-next-line no-unused-vars
       row.forEach((col) => {
         const cell = document.createElement('div');
+
         cell.classList.add('cell');
-        player2Grid.append(cell);
+        rowElement.append(cell);
       });
+      player2Grid.append(rowElement);
     });
+    renderShips(player2.gameboard, player2Grid);
 
     return { player1Container, player2Container };
   };
-
-  const renderShips = (gameboard) => {};
 
   return {
     renderSettings,
