@@ -49,10 +49,29 @@ const Gameboard = () => {
         return 'Trying to place ship out of bounds';
       }
 
-      const hasShip = gameboard.grid[coordinates.row][coordinates.col] === '*';
-
-      if (hasShip) {
-        return 'There is another ship at these coordinates';
+      // checking for ship overlap
+      let checkCoordinates = {};
+      let shipLocation;
+      for (let i = 0; i < ship.length; i++) {
+        if (ship.orientation === 'vertical') {
+          const nextCol = coordinates.col + i;
+          for (let j = 0; j < ship.length; j++) {
+            checkCoordinates = { row: coordinates.row + j, col: nextCol };
+            shipLocation = getShipAtCoordinates(gameboard, checkCoordinates);
+            if (shipLocation) {
+              return 'There is another ship at these coordinates';
+            }
+          }
+        } else {
+          const nextRow = coordinates.row + i;
+          for (let j = 0; j < ship.length; j++) {
+            checkCoordinates = { row: nextRow, col: coordinates.col + j };
+            shipLocation = getShipAtCoordinates(gameboard, checkCoordinates);
+            if (shipLocation) {
+              return 'There is another ship at these coordinates';
+            }
+          }
+        }
       }
     }
   };
@@ -60,7 +79,7 @@ const Gameboard = () => {
   const placeShip = (gameboard, coordinates, ship) => {
     const error = checkInvalidInput(gameboard, coordinates, ship);
 
-    if (error) {
+    if (typeof error === 'string') {
       return error;
     }
 
