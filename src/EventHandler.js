@@ -1,7 +1,7 @@
-const GameboardHandler = require('./Gameboard');
-const PlayerHandler = require('./Player');
-const ShipHandler = require('./Ship');
+import GameboardHandler from './Gameboard';
+import PlayerHandler from './Player';
+import ShipHandler from './Ship';
 
 const EventHandler = {};
 
-module.exports = EventHandler;
+export default EventHandler;
