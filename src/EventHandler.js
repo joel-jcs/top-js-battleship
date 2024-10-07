@@ -1,33 +1,33 @@
-import GameboardHandler from './Gameboard';
 import PlayerHandler from './Player';
-import ShipHandler from './Ship';
 import DOMHandler from './DOMHandler';
+import GameManager from './GameManager';
 
 const EventHandler = () => {
-  const attackListener = (player, opponentGrid, opponentBoard) => {
-    console.log(opponentGrid);
+  const attackListener = (player, opponent, opponentGrid) => {
+    const opponentBoard = opponent.gameboard;
 
-    if (player.isCPU === false) {
-      const gridRows = opponentGrid.querySelectorAll('.row');
+    const gridRows = opponentGrid.querySelectorAll('.row');
 
-      gridRows.forEach((row, rowIndex) => {
-        const columns = row.querySelectorAll('.cell');
+    gridRows.forEach((row, rowIndex) => {
+      const columns = row.querySelectorAll('.cell');
 
-        columns.forEach((column, colIndex) => {
-          column.addEventListener('click', (event) => {
-            const { target } = event;
-            console.log(target, rowIndex, colIndex);
+      columns.forEach((column, colIndex) => {
+        column.addEventListener('click', (event) => {
+          const { target } = event;
+          const coordinates = {
+            row: rowIndex,
+            col: colIndex,
+          };
+          const attackedBoard = PlayerHandler.attack(
+            opponentBoard,
+            coordinates,
+          );
 
-            const attackedBoard = PlayerHandler.attack(opponentBoard, {
-              row: rowIndex,
-              col: colIndex,
-            });
-
-            DOMHandler.updateBoard(attackedBoard, opponentGrid);
-          });
+          DOMHandler.updateBoard(opponentGrid, attackedBoard, coordinates);
+          GameManager.startTurn(opponent, player);
         });
       });
-    }
+    });
   };
   return {
     attackListener,
