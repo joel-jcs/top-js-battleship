@@ -111,6 +111,7 @@ a {
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
+  background-color: white;
 }
 
 .row {
@@ -122,11 +123,25 @@ a {
 .cell {
   flex-basis: calc(100% / 10);
   border: 1px solid gray;
-  background-color: white;
+  font-size: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
 }
 
 .ship {
   background-color: aqua;
+}
+
+.hit {
+  border: 1px solid red;
+  background-color: rgba(230, 4, 4, 0.4);
+}
+
+.miss {
+  border: 1px solid blue;
+  background-color: rgba(4, 134, 249, 0.4);
 }
 
 footer {
