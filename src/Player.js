@@ -27,7 +27,7 @@ const Player = () => {
   };
 
   const attack = (gameboard, coordinates) => {
-    GameboardHandler.receiveAttack(gameboard, coordinates);
+    return GameboardHandler.receiveAttack(gameboard, coordinates);
   };
 
   const setWinner = (player) => (player.isWinner = true);
