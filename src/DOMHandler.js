@@ -1,7 +1,6 @@
 import GameboardHandler from './Gameboard';
-import PlayerHandler from './Player';
 import ShipHandler from './Ship';
-import EventHandler from './EventHandler';
+import GameManager from './GameManager';
 
 const DOMHandler = () => {
   const renderSettings = () => {
@@ -117,7 +116,7 @@ const DOMHandler = () => {
     player1Container.append(player1Grid);
     player2Container.append(player2Grid);
 
-    const player1 = PlayerHandler.createPlayer('Player 1');
+    const { player1, player2 } = GameManager.createPlayers();
     player1.gameboard.grid.forEach((row) => {
       const rowElement = document.createElement('div');
       rowElement.classList.add('row');
@@ -132,7 +131,6 @@ const DOMHandler = () => {
     });
     renderShips(player1.gameboard, player1Grid);
 
-    const player2 = PlayerHandler.createPlayer('Player 2', true);
     player2.gameboard.grid.forEach((row) => {
       const rowElement = document.createElement('div');
       rowElement.classList.add('row');
@@ -147,25 +145,22 @@ const DOMHandler = () => {
     });
     setShips(player2.gameboard);
 
-    EventHandler.attackListener(player1, player2Grid, player2.gameboard);
+    GameManager.startTurn(player1, player2);
 
     return { player1Container, player2Container };
   };
 
-  const updateBoard = (attackedBoard, opponentGrid) => {
+  const updateBoard = (opponentGrid, attackedBoard, coordinates) => {
     const gridRows = opponentGrid.querySelectorAll('.row');
+    const { row, col } = coordinates;
 
-    for (let row = 0; row < attackedBoard.grid.length; row++) {
-      for (let col = 0; col < attackedBoard.grid[row].length; col++) {
-        const attackedCoordinates = attackedBoard.grid[row][col];
-        if (attackedCoordinates === 'x') {
-          gridRows[row].children[col].classList.add('hit');
-          gridRows[row].children[col].innerText = '💥';
-        } else if (attackedCoordinates === 'o') {
-          gridRows[row].children[col].classList.add('miss');
-          gridRows[row].children[col].innerText = '💦';
-        }
-      }
+    const attackedCoordinates = attackedBoard.grid[row][col];
+    if (attackedCoordinates === 'x') {
+      gridRows[row].children[col].classList.add('hit');
+      gridRows[row].children[col].innerText = '💥';
+    } else if (attackedCoordinates === 'o') {
+      gridRows[row].children[col].classList.add('miss');
+      gridRows[row].children[col].innerText = '💦';
     }
   };
 
