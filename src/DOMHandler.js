@@ -1,6 +1,7 @@
 import GameboardHandler from './Gameboard';
 import PlayerHandler from './Player';
 import ShipHandler from './Ship';
+import EventHandler from './EventHandler';
 
 const DOMHandler = () => {
   const renderSettings = () => {
@@ -131,7 +132,7 @@ const DOMHandler = () => {
     });
     renderShips(player1.gameboard, player1Grid);
 
-    const player2 = PlayerHandler.createPlayer('Player 2');
+    const player2 = PlayerHandler.createPlayer('Player 2', true);
     player2.gameboard.grid.forEach((row) => {
       const rowElement = document.createElement('div');
       rowElement.classList.add('row');
@@ -144,14 +145,34 @@ const DOMHandler = () => {
       });
       player2Grid.append(rowElement);
     });
-    renderShips(player2.gameboard, player2Grid);
+    setShips(player2.gameboard);
+
+    EventHandler.attackListener(player1, player2Grid, player2.gameboard);
 
     return { player1Container, player2Container };
+  };
+
+  const updateBoard = (attackedBoard, opponentGrid) => {
+    const gridRows = opponentGrid.querySelectorAll('.row');
+
+    for (let row = 0; row < attackedBoard.grid.length; row++) {
+      for (let col = 0; col < attackedBoard.grid[row].length; col++) {
+        const attackedCoordinates = attackedBoard.grid[row][col];
+        if (attackedCoordinates === 'x') {
+          gridRows[row].children[col].classList.add('hit');
+          gridRows[row].children[col].innerText = '💥';
+        } else if (attackedCoordinates === 'o') {
+          gridRows[row].children[col].classList.add('miss');
+          gridRows[row].children[col].innerText = '💦';
+        }
+      }
+    }
   };
 
   return {
     renderSettings,
     renderGameboards,
+    updateBoard,
   };
 };
 
