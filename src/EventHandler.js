@@ -6,28 +6,36 @@ const EventHandler = () => {
   const attackListener = (player, opponent, opponentGrid) => {
     const opponentBoard = opponent.gameboard;
 
-    const gridRows = opponentGrid.querySelectorAll('.row');
+    const clickHandler = (event) => {
+      const cell = event.target;
+      const row = cell.parentNode;
 
-    gridRows.forEach((row, rowIndex) => {
-      const columns = row.querySelectorAll('.cell');
+      const rowIndex = Array.prototype.indexOf.call(
+        row.parentNode.children,
+        row,
+      );
+      const colIndex = Array.prototype.indexOf.call(row.children, cell);
 
-      columns.forEach((column, colIndex) => {
-        column.addEventListener('click', (event) => {
-          const { target } = event;
-          const coordinates = {
-            row: rowIndex,
-            col: colIndex,
-          };
-          const attackedBoard = PlayerHandler.attack(
-            opponentBoard,
-            coordinates,
-          );
+      if (
+        event.target.classList.contains('miss') ||
+        event.target.classList.contains('hit')
+      ) {
+        return;
+      }
+      const coordinates = {
+        row: rowIndex,
+        col: colIndex,
+      };
 
-          DOMHandler.updateBoard(opponentGrid, attackedBoard, coordinates);
-          GameManager.startTurn(opponent, player);
-        });
-      });
-    });
+      const attackedBoard = PlayerHandler.attack(opponentBoard, coordinates);
+      DOMHandler.updateBoard(opponentGrid, attackedBoard, coordinates);
+      GameManager.startTurn(opponent, player);
+
+      if (player.isWinner || opponent.isWinner) {
+        opponentGrid.removeEventListener('click', clickHandler);
+      }
+    };
+    opponentGrid.addEventListener('click', clickHandler);
   };
   return {
     attackListener,
