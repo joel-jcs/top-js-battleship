@@ -22,18 +22,22 @@ const GameManager = () => {
     const arePlayer2ShipsSunk = GameboardHandler.areAllShipsSunk(
       opponent.gameboard,
     );
-    console.log(arePlayer1ShipsSunk, arePlayer2ShipsSunk);
     if (arePlayer1ShipsSunk) {
       PlayerHandler.setWinner(opponent);
-      alert(`Game Over! ${opponent.name} has won the game!`);
-    } else if (arePlayer2ShipsSunk) {
-      PlayerHandler.setWinner(player);
-      alert(`Game Over! ${player.name} has won the game!`);
+      // alert(`Game Over! ${opponent.name} has won the game!`);
     }
+    if (arePlayer2ShipsSunk) {
+      PlayerHandler.setWinner(player);
+      // alert(`Game Over! ${player.name} has won the game!`);
+    }
+
+    const winnerFound = arePlayer1ShipsSunk
+      ? arePlayer2ShipsSunk
+      : arePlayer1ShipsSunk;
+    return winnerFound;
   };
 
   const startTurn = (player, opponent) => {
-    console.log(player, opponent);
     const winnerFound = checkWinner(player, opponent);
     if (winnerFound) return;
     if (player.name === 'player1') {
