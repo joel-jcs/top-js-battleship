@@ -1,5 +1,4 @@
 import './styles.css';
-import DOMHandler from './DOMHandler';
+import GameManager from './GameManager';
 
-DOMHandler.renderSettings();
-DOMHandler.renderGameboards();
+GameManager.initGame();
