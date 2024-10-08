@@ -5,13 +5,13 @@ import DOMHandler from './DOMHandler';
 
 const GameManager = () => {
   const initGame = () => {
-    DOMHandler.renderSettings();
+    DOMHandler.renderInfoContainer();
     DOMHandler.renderGameboards();
   };
 
   const createPlayers = () => {
-    const player1 = PlayerHandler.createPlayer('player1');
-    const player2 = PlayerHandler.createPlayer('player2', true);
+    const player1 = PlayerHandler.createPlayer('Player 1');
+    const player2 = PlayerHandler.createPlayer('CPU', true);
     return { player1, player2 };
   };
 
@@ -40,7 +40,7 @@ const GameManager = () => {
   const startTurn = (player, opponent) => {
     const winnerFound = checkWinner(player, opponent);
     if (winnerFound) return;
-    if (player.name === 'player1') {
+    if (player.name !== 'CPU') {
       const player2Grid = document.getElementById('player2-grid');
       EventHandler.attackListener(player, opponent, player2Grid);
     } else {
