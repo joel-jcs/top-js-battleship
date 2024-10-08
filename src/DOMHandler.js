@@ -1,12 +1,34 @@
 import GameboardHandler from './Gameboard';
 import ShipHandler from './Ship';
 import GameManager from './GameManager';
+import EventHandler from './EventHandler';
 
 const DOMHandler = () => {
   const renderInfoContainer = () => {
     const infoContainer = document.getElementById('info-container');
+    const startBtn = document.createElement('button');
+    startBtn.id = 'start-btn';
+    startBtn.textContent = 'START GAME';
+    infoContainer.appendChild(startBtn);
 
     return infoContainer;
+  };
+
+  const renderInfoMessage = () => {
+    const infoContainer = document.getElementById('info-container');
+    const infoMessage = document.createElement('h3');
+    infoMessage.id = 'info-message';
+    infoContainer.appendChild(infoMessage);
+  };
+
+  const updateInfoMessage = (message) => {
+    const infoMessage = document.getElementById('info-message');
+    infoMessage.innerHTML = message;
+  };
+
+  const setGridOpacity = (currentPlayer, idlePlayer) => {
+    currentPlayer.style.opacity = 0.5;
+    idlePlayer.style.opacity = 1;
   };
 
   const setShips = (gameboard) => {
@@ -156,7 +178,10 @@ const DOMHandler = () => {
     });
     setShips(player2.gameboard);
 
-    GameManager.startTurn(player1, player2);
+    player1Container.style.opacity = '0.3';
+    player2Container.style.opacity = '0.3';
+
+    EventHandler.startGameListener(player1, player2);
 
     return { player1Container, player2Container };
   };
@@ -175,10 +200,23 @@ const DOMHandler = () => {
     }
   };
 
+  const renderRestartButton = () => {
+    const infoContainer = document.getElementById('info-container');
+    const restartButton = document.createElement('button');
+    restartButton.id = 'restart-btn';
+    restartButton.textContent = 'Play Again?';
+    restartButton.classList.add('restart-btn');
+    infoContainer.append(restartButton);
+  };
+
   return {
     renderInfoContainer,
+    renderInfoMessage,
+    updateInfoMessage,
+    setGridOpacity,
     renderGameboards,
     updateBoard,
+    renderRestartButton,
   };
 };
 
