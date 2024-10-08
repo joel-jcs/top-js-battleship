@@ -3,10 +3,10 @@ import ShipHandler from './Ship';
 import GameManager from './GameManager';
 
 const DOMHandler = () => {
-  const renderSettings = () => {
-    const settingsContainer = document.getElementById('settings-container');
+  const renderInfoContainer = () => {
+    const infoContainer = document.getElementById('info-container');
 
-    return settingsContainer;
+    return infoContainer;
   };
 
   const setShips = (gameboard) => {
@@ -64,6 +64,21 @@ const DOMHandler = () => {
   };
 
   const renderGameboards = () => {
+    const { player1, player2 } = GameManager.createPlayers();
+    const player1Container = document.getElementById('player1-container');
+    const player2Container = document.getElementById('player2-container');
+
+    //add player names to each grid
+    const player1Name = document.createElement('h2');
+    player1Name.classList.add('player-name');
+    player1Name.textContent = player1.name;
+    player1Container.append(player1Name);
+
+    const player2Name = document.createElement('h2');
+    player2Name.classList.add('player-name');
+    player2Name.textContent = player2.name;
+    player2Container.append(player2Name);
+
     // create grid labels
     const gridRowLegend = document.createElement('div');
     const gridColLegend = document.createElement('div');
@@ -92,9 +107,6 @@ const DOMHandler = () => {
       gridColLegend.append(gridColLabel);
     });
 
-    const player1Container = document.getElementById('player1-container');
-    const player2Container = document.getElementById('player2-container');
-
     const gridRowLegend2 = gridRowLegend.cloneNode(true);
     const gridColLegend2 = gridColLegend.cloneNode(true);
 
@@ -116,7 +128,6 @@ const DOMHandler = () => {
     player1Container.append(player1Grid);
     player2Container.append(player2Grid);
 
-    const { player1, player2 } = GameManager.createPlayers();
     player1.gameboard.grid.forEach((row) => {
       const rowElement = document.createElement('div');
       rowElement.classList.add('row');
@@ -165,7 +176,7 @@ const DOMHandler = () => {
   };
 
   return {
-    renderSettings,
+    renderInfoContainer,
     renderGameboards,
     updateBoard,
   };
