@@ -32,10 +32,10 @@ const EventHandler = () => {
       GameManager.startTurn(opponent, player);
 
       if (player.isWinner || opponent.isWinner) {
-        opponentGrid.removeEventListener('click', clickHandler);
+        opponentGrid.removeEventListener('mouseup', clickHandler);
       }
     };
-    opponentGrid.addEventListener('click', clickHandler);
+    opponentGrid.addEventListener('mouseup', clickHandler);
   };
   return {
     attackListener,
